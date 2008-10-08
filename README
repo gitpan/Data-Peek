@@ -1,0 +1,44 @@
+Module:
+    Data::Peek - A collection of low-level debug functions
+
+Description:
+    Modified and extended wrapper functions to make debugging more
+    pleasureable.
+
+    DDumper is a wrapper around Data::Dumper with always sorted keys.
+    The output is however reflowed and not parseable anymore (in most
+    cases) as the quotation around the keys is removed.
+
+    DDump is a wrapper around perl's core function sv_dump (), which
+    should enable you to use the output instead of the default behaviour
+    that only prints to STDERR.
+
+    DPeek is a wrapper around internals Perl_sv_peek
+
+    DDump_IO is a wrapper around perl's core function do_sv_dump (),
+    which acts like sv_dump (), but to a PerlIO stream, which is only
+    available in perl 5.8 and higher.
+
+    Recent changes can be (re)viewed in the public GIT repository at
+    http://repo.or.cz/w/Data-Peek.git
+
+Copying:
+    Copyright (c) 2008-2008 H.Merijn Brand.  All rights reserved.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the same terms as Perl itself.
+
+Prerequisites:
+    Perl 5.6.0 and up.
+    Some versions of perl on some operating system(s) might not have
+    exported the internals (yet). This module won't build then.
+
+Build/Installation:
+    Standard build/installation:
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+Author:
+    H.Merijn Brand <h.m.brand@xs4all.nl>
