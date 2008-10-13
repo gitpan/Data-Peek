@@ -3,11 +3,19 @@
 use strict;
 use warnings;
 
-use Test::More tests => 49;
+use Test::More;
 
 use Data::Peek;
 
 $| = 1;
+
+my $peek = DPeek (0);
+if ($peek =~ m/^Your perl did not/) {
+    plan skip_all => $peek;
+    }
+else {
+    plan tests => 49;
+    }
 
 like (DPeek ($/), qr'^PVMG\("\\(n|12)"\\0\)',	'$/');
   is (DPeek ($\),    'PVMG()',			'$\\');

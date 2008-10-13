@@ -46,6 +46,18 @@ SV *_DDump (SV *sv)
 
 MODULE = Data::Peek		PACKAGE = Data::Peek
 
+#ifdef NO_SV_PEEK
+
+void
+DPeek (...)
+  PROTOTYPE: ;$
+  PPCODE:
+    ST (0) = newSVpv ("Your perl did not export Perl_sv_peek ()", 0);
+    XSRETURN (1);
+    /* XS DPeek */
+
+#else
+
 void
 DPeek (...)
   PROTOTYPE: ;$
@@ -53,6 +65,8 @@ DPeek (...)
     ST (0) = newSVpv (Perl_sv_peek (aTHX_ items ? ST (0) : DEFSV), 0);
     XSRETURN (1);
     /* XS DPeek */
+
+#endif
 
 void
 DDual (sv, ...)

@@ -38,6 +38,8 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	}
     }
 
+$ENV{NO_SV_PEEK} and $wm{DEFINE} = "-DNO_SV_PEEK";
+
 my $rv = WriteMakefile (%wm);
 
 1;

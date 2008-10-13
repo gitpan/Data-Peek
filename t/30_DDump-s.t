@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 # I would like more tests, but contents change over every perl version
-use Test::More tests => 6;
+use Test::More tests => 5;
 
 use Data::Peek;
 
@@ -18,15 +18,7 @@ my @tests;
     }
 
 # Determine what newlines this perl generates in sv_peek
-my @nl = ("\\n", "\\n");
-{   if ($] >= 5.008) {
-	my $nl = "\n\x{20ac}";
-	chop $nl;
-	$nl = DPeek ($nl);
-	@nl = ($nl =~ m/"([^"]+)".*"([^"]+)"/);
-	}
-    ok (1, "This perl dumps \\n as (@nl)");
-    }
+my @nl = ("\\n") x 2;
 
 my $var = "";
 
@@ -34,14 +26,23 @@ foreach my $test (@tests) {
     my ($in, $out) = split m/\n--\n/ => $test;
     $in eq "" and next;
     SKIP: {
-	$in =~ m/20ac/ and $] < 5.008 and skip "No UTF8 in ancient perl", 1;
-
 	eval "\$var = $in;";
 	my $dump = DDump ($var);
+
+	if ($in =~ m/20ac/) {
+	    if ($] < 5.008) {
+		skip "No UTF8 in ancient perl", 1;
+		}
+	    else {
+		@nl = ($dump =~ m/PV = 0x\w+ "([^"]+)".*"([^"]+)"/);
+		diag "# This perl dumps \\n as (@nl)";
+		# Catch differences in \n
+		$dump =~ s/"ab\Q$nl[0]\E(.*?)"ab\Q$nl[1]\E/"ab\\n$1"ab\\n/;
+		}
+	    }
+
 	$dump =~ s/\b0x[0-9a-f]+\b/0x****/g;
 	$dump =~ s/\b(REFCNT =) [0-9]{4,}/$1 -1/g;
-	# Catch differences in \n
-	$dump =~ s/"ab\Q$nl[0]\E(.*?)"ab\Q$nl[1]\E/"ab\\n$1"ab\\n/;
 
 	$dump =~ s/\bLEN = [1-7]\b/LEN = 8/;	# aligned at long long?
 

@@ -1,3 +1,10 @@
+2008-10-13 0.21 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+	* Typo in pod (Joshua Juran)
+	* MSwin doesn't use plain \n (RT#39916)
+	* Some MSWin (ActivePerl) and AIX builds do not have
+	  Perl_sv_peek () exported (RT#39916)
+
 2008-10-08 0.20 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
 	* Renamed DDumper to Data::Peek

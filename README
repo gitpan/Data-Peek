@@ -33,6 +33,11 @@ Prerequisites:
     Some versions of perl on some operating system(s) might not have
     exported the internals (yet). This module won't build then.
 
+    If you run a perl that did not export Perl_sv_peek (), DPeek will
+    not be available. If you happen to encounter that problem, most
+    likely on Windows or AIX, C<export NO_SV_PEEK=1> will make the
+    build and test pass (I hope)
+
 Build/Installation:
     Standard build/installation:
 	perl Makefile.PL

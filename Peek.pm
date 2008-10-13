@@ -6,7 +6,7 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT );
-$VERSION = "0.20";
+$VERSION = "0.21";
 @ISA     = qw( DynaLoader Exporter );
 @EXPORT  = qw( DDumper DPeek DDump DDual );
 $] >= 5.007003 and push @EXPORT, "DDump_IO";
@@ -87,7 +87,7 @@ sub _DDump
 sub DDump ($;$)
 {
     my ($var, $down) = (@_, 0);
-    my @dump = split "\n", _DDump ($var, wantarray || $down) or return;
+    my @dump = split m/[\r\n]+/, _DDump ($var, wantarray || $down) or return;
 
     if (wantarray) {
 	my %hash;
@@ -143,7 +143,7 @@ Data::Peek - A collection of low-level debug facilities
 
 =head1 DESCRIPTION
 
-Data::Peek started of as C<DDumper> being a wrapper module over
+Data::Peek started off as C<DDumper> being a wrapper module over
 L<Data::Dumper>, but grew out to be a set of low-level data
 introspection utilities that no other module provided yet, using the
 lowest level of the perl internals API as possible.
