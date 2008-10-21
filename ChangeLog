@@ -1,3 +1,10 @@
+2008-10-20 0.22 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+	* Updated to ppport-3.14_01
+	* YAML declared 1.4 (META.yml) instead of 1.1 (YAML)
+	* DP.pm gets version from Peek.pm
+	* DP.pm should not be installed in Data namespace
+
 2008-10-13 0.21 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
 	* Typo in pod (Joshua Juran)
