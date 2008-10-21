@@ -40,7 +40,10 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	open my $fh, ">", "DP.pm"   or die "Cannot open DP.pm: $!\n";
 	print   $fh $dp;
 	close   $fh;
-	$wm{PM}{"DP.pm"} = '$(INST_LIB)/DP.pm';
+	$wm{PM} = {
+	    "Peek.pm" => '$(INST_LIB)/Data/Peek.pm',
+	    "DP.pm"   => '$(INST_LIB)/DP.pm',
+	    };
 	$wm{clean}{FILES} .= " DP.pm";
 	}
     }

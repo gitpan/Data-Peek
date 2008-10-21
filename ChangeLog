@@ -1,3 +1,7 @@
+2008-10-21 0.23 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+	* Selecting to install DP did not install Data::Peek
+
 2008-10-20 0.22 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
 	* Updated to ppport-3.14_01
