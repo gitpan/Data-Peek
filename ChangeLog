@@ -1,3 +1,11 @@
+2008-10-31 0.24 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+	* Implement DDisplay ()
+	* Implement triplevar ()
+	* Update ppport.h to 3.14_05 (mhx++)
+	* 5.6.x DDisplay ()'s UTF8 different
+	* make leaktest/leakcheck enabled and executed
+
 2008-10-21 0.23 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
 	* Selecting to install DP did not install Data::Peek

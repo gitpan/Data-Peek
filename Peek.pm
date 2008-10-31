@@ -5,10 +5,11 @@ use warnings;
 
 use DynaLoader ();
 
-use vars qw( $VERSION @ISA @EXPORT );
-$VERSION = "0.23";
-@ISA     = qw( DynaLoader Exporter );
-@EXPORT  = qw( DDumper DPeek DDump DDual );
+use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
+$VERSION   = "0.24";
+@ISA       = qw( DynaLoader Exporter );
+@EXPORT    = qw( DDumper DPeek DDisplay DDump DDual );
+@EXPORT_OK = qw( triplevar );
 $] >= 5.007003 and push @EXPORT, "DDump_IO";
 
 bootstrap Data::Peek $VERSION;
@@ -128,6 +129,7 @@ Data::Peek - A collection of low-level debug facilities
  print DPeek \$var;
  my ($pv, $iv, $nv, $rv, $magic) = DDual ($var [, 1]);
  print DPeek for DDual ($!, 1);
+ print DDisplay ("ab\nc\x{20ac}\rdef\n");
 
  my $dump = DDump $var;
  my %hash = DDump \@list;
@@ -140,6 +142,9 @@ Data::Peek - A collection of low-level debug facilities
  DDump_IO ($fh, \%hash, 6);
  close $fh;
  print $dump;
+
+ use Data::Peek qw( triplevar );
+ my $tv = triplevar ("\N{GREEK SMALL LETTER PI}", 3, "3.1415");
 
 =head1 DESCRIPTION
 
@@ -194,6 +199,22 @@ Example
 
   PV("abc\nde\342\202\254fg"\0) [UTF8 "abc\nde\x{20ac}fg"]
 
+=head2 DDisplay
+
+=head2 DDisplay ($var)
+
+Show the PV content of a scalar the way perl debugging would have done.
+UTF-8 detection is on, so this is effectively the same as returning the
+first part the C<DPeek ()> returns for non-UTF8 PV's or the second part
+for UTF-8 PV's. C<DDisplay ()> returns the empty string for scalars that
+no have a valid PV.
+
+Example
+
+  print DDisplay "abc\x{0a}de\x{20ac}fg";
+
+  "abc\nde\x{20ac}fg"
+
 =head2 DDual ($var [, $getmagic])
 
 DDual will return the basic elements in a variable, guaranteeing that no
@@ -208,6 +229,27 @@ second argument.
 Example
 
   print DPeek for DDual ($!, 1);
+
+=head2 triplevar ($pv, $iv, $nv)
+
+When making C<DDual ()> I wondered if it were possible to create triple-val
+scalar variables. L<Scalar::Util> already gives us C<dualvar ()>, that creates
+you a scalar with different numeric and string values that return different
+values in different context. Not that C<triplevar ()> would be very useful,
+compared to C<dualvar ()>, but at least this shows that it is possible.
+
+C<triplevar ()> is not exported by default.
+
+Example:
+
+  print DPeek for DDual
+      Data::Peek::triplevar ("\N{GREEK SMALL LETTER PI}", 3, 3.1415)'
+
+  PV("\317\200"\0) [UTF8 "\x{3c0}"]
+  IV(3)
+  NV(3.1415)
+  SV_UNDEF
+  IV(0)
 
 =head3 DDump ($var [, $dig_level])
 

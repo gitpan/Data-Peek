@@ -9,6 +9,9 @@ extern "C" {
 #include <EXTERN.h>
 #include <perl.h>
 #include <XSUB.h>
+#define	NEED_pv_pretty
+#define	NEED_pv_escape
+#define	NEED_my_snprintf
 #include "ppport.h"
 #ifdef __cplusplus
 }
@@ -67,6 +70,52 @@ DPeek (...)
     /* XS DPeek */
 
 #endif
+
+void
+DDisplay (...)
+  PROTOTYPE: ;$
+  PPCODE:
+    SV *sv  = items ? ST (0) : DEFSV;
+    SV *dsp = newSVpv ("", 0);
+    if (SvPOK (sv) || SvPOKp (sv))
+	Perl_pv_pretty (aTHX_ dsp, SvPVX (sv), SvCUR (sv), 0,
+	    NULL, NULL,
+	    (PERL_PV_PRETTY_DUMP | PERL_PV_ESCAPE_UNI_DETECT));
+    ST (0) = dsp;
+    XSRETURN (1);
+    /* XS DDisplay */
+
+void
+triplevar (pv, iv, nv)
+    SV  *pv
+    SV  *iv
+    SV  *nv
+
+  PROTOTYPE: $$$
+  PPCODE:
+    SV  *tv = newSVpvs ("");
+    SvUPGRADE (tv, SVt_PVNV);
+
+    if (SvPOK (pv) || SvPOKp (pv)) {
+	sv_setpvn (tv, SvPVX (pv), SvCUR (pv));
+	if (SvUTF8 (pv)) SvUTF8_on (tv);
+	}
+    else
+	sv_setpvn (tv, NULL, 0);
+
+    if (SvNOK (nv) || SvNOKp (nv)) {
+	SvNV_set (tv, SvNV (nv));
+	SvNOK_on (tv);
+	}
+
+    if (SvIOK (iv) || SvIOKp (iv)) {
+	SvIV_set (tv, SvIV (iv));
+	SvIOK_on (tv);
+	}
+
+    ST (0) = tv;
+    XSRETURN (1);
+    /* XS triplevar */
 
 void
 DDual (sv, ...)
