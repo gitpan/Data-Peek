@@ -20,7 +20,7 @@ else {
 like (DPeek ($/), qr'^PVMG\("\\(n|12)"\\0\)',	'$/');
   is (DPeek ($\),    'PVMG()',			'$\\');
   is (DPeek ($.),    'PVMG()',			'$.');
-like (DPeek ($,), qr'^PVMG\((""\\0)?\)',	'$,');
+like (DPeek ($,), qr'^PVMG\((""\\0)?\)|^UNDEF$','$,');
   is (DPeek ($;),    'PV("\34"\0)',		'$;');
   is (DPeek ($"),    'PV(" "\0)',		'$"');
 like (DPeek ($:), qr'^PVMG\(" \\(n|12)-"\\0\)',	'$:');
