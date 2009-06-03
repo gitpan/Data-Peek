@@ -17,12 +17,11 @@ extern "C" {
 }
 #endif
 
-SV *_DDump (SV *sv)
+SV *_DDump (pTHX_ SV *sv)
 {
     int   err[3], n;
     char  buf[128];
     SV   *dd;
-    dTHX;
 
     if (pipe (err)) return (NULL);
 
@@ -30,46 +29,51 @@ SV *_DDump (SV *sv)
     err[2] = dup (2);
     close (2);
     if (dup (err[1]) == 2)
-	Perl_sv_dump (aTHX_ sv);
+	sv_dump (sv);
     close (err[1]);
     close (2);
     err[1] = dup (err[2]);
     close (err[2]);
 
-    Perl_sv_setpvn (aTHX_ dd, "", 0);
+    sv_setpvn (dd, "", 0);
     while ((n = read (err[0], buf, 128)) > 0)
 #if PERL_VERSION >= 8
 	/* perl 5.8.0 did not export Perl_sv_catpvn */
-	Perl_sv_catpvn_flags (aTHX_ dd, buf, n, SV_GMAGIC);
+	sv_catpvn_flags (dd, buf, n, SV_GMAGIC);
 #else
-	Perl_sv_catpvn       (aTHX_ dd, buf, n);
+	sv_catpvn       (dd, buf, n);
 #endif
     return (dd);
     } /* _DDump */
 
+SV *_DPeek (pTHX_ int items, SV *sv)
+{
+#ifdef NO_SV_PEEK
+    return newSVpv ("Your perl did not export Perl_sv_peek ()", 0);
+#else
+    return newSVpv (sv_peek (items ? sv : DEFSV), 0);
+#endif
+    } /* _DPeek */
+
+void _Dump_Dual (pTHX_ SV *sv, SV *pv, SV *iv, SV *nv, SV *rv)
+{
+#ifndef NO_SV_PEEK
+    (void)fprintf (stderr, "%s\n  PV: %s\n  IV: %s\n  NV: %s\n  RV: %s\n",
+	sv_peek (sv), sv_peek (pv), sv_peek (iv), sv_peek (nv), sv_peek (rv));
+#endif
+    } /* _Dump_Dual */
+
 MODULE = Data::Peek		PACKAGE = Data::Peek
 
-#ifdef NO_SV_PEEK
-
 void
 DPeek (...)
   PROTOTYPE: ;$
   PPCODE:
-    ST (0) = newSVpv ("Your perl did not export Perl_sv_peek ()", 0);
+    I32 gimme = GIMME_V;
+    ST (0) = _DPeek (aTHX_ items, ST (0));
+    if (gimme == G_VOID) (void)fprintf (stderr, "%s\n", SvPVX (ST (0)));
     XSRETURN (1);
     /* XS DPeek */
-
-#else
-
-void
-DPeek (...)
-  PROTOTYPE: ;$
-  PPCODE:
-    ST (0) = newSVpv (Perl_sv_peek (aTHX_ items ? ST (0) : DEFSV), 0);
-    XSRETURN (1);
-    /* XS DPeek */
-
-#endif
 
 void
 DDisplay (...)
@@ -78,7 +82,7 @@ DDisplay (...)
     SV *sv  = items ? ST (0) : DEFSV;
     SV *dsp = newSVpv ("", 0);
     if (SvPOK (sv) || SvPOKp (sv))
-	Perl_pv_pretty (aTHX_ dsp, SvPVX (sv), SvCUR (sv), 0,
+	pv_pretty (dsp, SvPVX (sv), SvCUR (sv), 0,
 	    NULL, NULL,
 	    (PERL_PV_PRETTY_DUMP | PERL_PV_ESCAPE_UNI_DETECT));
     ST (0) = dsp;
@@ -123,6 +127,8 @@ DDual (sv, ...)
 
   PROTOTYPE: $;$
   PPCODE:
+    I32 gimme = GIMME_V;
+
     if (items > 1 && SvGMAGICAL (sv) && SvTRUE (ST (1)))
 	mg_get (sv);
 
@@ -152,6 +158,8 @@ DDual (sv, ...)
 	PUSHs (&PL_sv_undef);
 
     mPUSHi (SvMAGICAL (sv) >> 21);
+
+    if (gimme == G_VOID) _Dump_Dual (aTHX_ sv, ST (0), ST (1), ST (2), ST (3));
     /* XS DDual */
 
 void
@@ -160,7 +168,7 @@ DDump_XS (sv)
 
   PROTOTYPE: $
   PPCODE:
-    SV   *dd = _DDump (sv);
+    SV   *dd = _DDump (aTHX_ sv);
 
     if (dd) {
 	ST (0) = dd;
@@ -179,7 +187,7 @@ DDump_IO (io, sv, level)
     IV      level
 
   PPCODE:
-    Perl_do_sv_dump (aTHX_ 0, io, sv, 1, level, 1, 0);
+    do_sv_dump (0, io, sv, 1, level, 1, 0);
     XSRETURN (1);
     /* XS DDump */
 

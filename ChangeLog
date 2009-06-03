@@ -1,70 +1,75 @@
+2009-06-03 0.27 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+    * void context behaviour for DPeek ()
+    * void context behaviour for DDual ()
+
 2009-06-03 0.26 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Upped copyright to 2009
-	* Corrected paren placement for bless (...)
-	* Documentation fixes
-	* Added Test::NoWarnings
-	* Added DDsort ()
+    * Upped copyright to 2009
+    * Corrected paren placement for bless (...)
+    * Documentation fixes
+    * Added Test::NoWarnings
+    * Added DDsort ()
 
 2008-11-24 0.25 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Wrong e-mail in META.yml
-	* #34831 fixed tied $,
+    * Wrong e-mail in META.yml
+    * #34831 fixed tied $,
 
 2008-10-31 0.24 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Implement DDisplay ()
-	* Implement triplevar ()
-	* Update ppport.h to 3.14_05 (mhx++)
-	* 5.6.x DDisplay ()'s UTF8 different
-	* make leaktest/leakcheck enabled and executed
+    * Implement DDisplay ()
+    * Implement triplevar ()
+    * Update ppport.h to 3.14_05 (mhx++)
+    * 5.6.x DDisplay ()'s UTF8 different
+    * make leaktest/leakcheck enabled and executed
 
 2008-10-21 0.23 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Selecting to install DP did not install Data::Peek
+    * Selecting to install DP did not install Data::Peek
 
 2008-10-20 0.22 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Updated to ppport-3.14_01
-	* YAML declared 1.4 (META.yml) instead of 1.1 (YAML)
-	* DP.pm gets version from Peek.pm
-	* DP.pm should not be installed in Data namespace
+    * Updated to ppport-3.14_01
+    * YAML declared 1.4 (META.yml) instead of 1.1 (YAML)
+    * DP.pm gets version from Peek.pm
+    * DP.pm should not be installed in Data namespace
 
 2008-10-13 0.21 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Typo in pod (Joshua Juran)
-	* MSwin doesn't use plain \n (RT#39916)
-	* Some MSWin (ActivePerl) and AIX builds do not have
-	  Perl_sv_peek () exported (RT#39916)
+    * Typo in pod (Joshua Juran)
+    * MSwin doesn't use plain \n (RT#39916)
+    * Some MSWin (ActivePerl) and AIX builds do not have
+      Perl_sv_peek () exported (RT#39916)
 
 2008-10-08 0.20 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Renamed DDumper to Data::Peek
-	* Default argument for DPeek is $_
-	* Optionally install DP as shortcut for Data::Peek
-	* Public git repo set up
+    * Renamed DDumper to Data::Peek
+    * Default argument for DPeek is $_
+    * Optionally install DP as shortcut for Data::Peek
+    * Public git repo set up
 
 2008-10-07 0.16 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Allocated length for PV's depends on arch (upped test to 8)
-	* Released on Amsterdam.pm
+    * Allocated length for PV's depends on arch (upped test to 8)
+    * Released on Amsterdam.pm
 
 2008-09-26 0.15 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Start writing tests for DDump ()
-	* Added DDual ()
+    * Start writing tests for DDump ()
+    * Added DDual ()
 
 2008-09-25 0.11 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* PerlIO is only available in 5.8 and up
-	* Perl 5.6 is a minimal requirement for 'use warnings'
-	* Tests for DPeek ()
-	* 5.8.0 did not export Perl_sv_catpvn ()
-	* Tested for 5.6.2, 5.8.0, 5.8.7, 5.8.8, 5.10.0, and devel
-	* Tests for DDumper ()
-	* Doc changes
-	* In void context DDumper prints to STDERR
+    * PerlIO is only available in 5.8 and up
+    * Perl 5.6 is a minimal requirement for 'use warnings'
+    * Tests for DPeek ()
+    * 5.8.0 did not export Perl_sv_catpvn ()
+    * Tested for 5.6.2, 5.8.0, 5.8.7, 5.8.8, 5.10.0, and devel
+    * Tests for DDumper ()
+    * Doc changes
+    * In void context DDumper prints to STDERR
 
 2008-09-24 0.10 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
-	* Initial attempt
+    * Initial attempt

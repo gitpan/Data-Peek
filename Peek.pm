@@ -6,7 +6,7 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.26";
+$VERSION   = "0.27";
 @ISA       = qw( DynaLoader Exporter );
 @EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual );
 @EXPORT_OK = qw( triplevar );
@@ -277,6 +277,8 @@ Example
 
   PV("abc\nde\342\202\254fg"\0) [UTF8 "abc\nde\x{20ac}fg"]
 
+In void context, C<DPeek ()> prints to C<STDERR> plus a newline.
+
 =head2 DDisplay
 
 =head2 DDisplay ($var)
@@ -308,6 +310,17 @@ Example
 
   print DPeek for DDual ($!, 1);
 
+In void context, DDual does the equivalent of
+
+  { my @d = DDual ($!, 1);
+    print STDERR
+      DPeek ($!), "\n",
+      "  PV: ", DPeek ($d[0]), "\n",
+      "  IV: ", DPeek ($d[1]), "\n",
+      "  NV: ", DPeek ($d[2]), "\n",
+      "  RV: ", DPeek ($d[3]), "\n";
+    }
+  
 =head2 triplevar ($pv, $iv, $nv)
 
 When making C<DDual ()> I wondered if it were possible to create triple-val
@@ -524,14 +537,12 @@ one of them.
 
 Not all types of references are supported.
 
-It might crash.
-
 No idea how far back this goes in perl support, but Devel::PPPort has
 proven to be a big help.
 
 =head1 SEE ALSO
 
-L<Devel::Peek(3)>, L<Data::Dumper(3)>, L<Data::Dump(3)>,
+L<Devel::Peek(3)>, L<Data::Dumper(3)>, L<Data::Dump(3)>, L<Devel::Dumpvar>,
 L<Data::Dump::Streamer(3)>
 
 =head1 AUTHOR
