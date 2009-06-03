@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::NoWarnings;
 
 use Data::Peek;
 
@@ -14,7 +15,7 @@ if ($peek =~ m/^Your perl did not/) {
     plan skip_all => $peek;
     }
 else {
-    plan tests => 49;
+    plan tests => 50;
     }
 
 like (DPeek ($/), qr'^PVMG\("\\(n|12)"\\0\)',	'$/');

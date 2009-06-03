@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright PROCURA B.V. (c) 2008-2008 H.Merijn Brand
+# Copyright PROCURA B.V. (c) 2008-2009 H.Merijn Brand
 
 require 5.006; # <- also see postamble at the bottom for META.yml
 use strict;
@@ -12,10 +12,11 @@ my %wm = (
     ABSTRACT     => "Extended/Modified debugging utilities",
     AUTHOR       => "H.Merijn Brand <h.merijn\@xs4all.nl>",
     VERSION_FROM => "Peek.pm",
-    PREREQ_PM	 => { "DynaLoader"	=> 0,
-		      "Data::Dumper"	=> 0,
-		      "Test::More"	=> 0,
-		      "Test::Harness"	=> 0,
+    PREREQ_PM	 => { "DynaLoader"	 => 0,
+		      "Data::Dumper"	 => 0,
+		      "Test::More"	 => 0,
+		      "Test::Harness"	 => 0,
+		      "Test::NoWarnings" => 0,
 		      },
     clean        => { FILES => join " ", qw(
 			 Peek.c.gcov
@@ -130,7 +131,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2008 H.Merijn Brand
+Copyright (C) 2008-2009 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

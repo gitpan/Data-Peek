@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 69;
+use Test::More tests => 70;
+use Test::NoWarnings;
 
 use Data::Peek;
 

@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 33;
+use Test::NoWarnings;
 
 use Data::Peek qw( DDual DPeek triplevar );
 

@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 56;
+use Test::NoWarnings;
 
 BEGIN {
     use_ok "Data::Peek";
@@ -20,6 +21,8 @@ while (<DATA>) {
 	next;
 	}
 
+    $v =~ s/^S:([^:]*):// and DDsort ($1), $v =~ m/^()/; # And reset $1 for below
+
     unless ($v eq "") {
 	eval "\$var = $v";
 	ok ($dump = DDumper ($var),	"DDumper ($v)");
@@ -27,7 +30,7 @@ while (<DATA>) {
 	$dump =~ s/;\n\Z//;
 	}
     if ($re) {
-	like ($dump, qr{$exp}m,		".. content $re");
+	like ($dump, qr{$exp}ms,	".. content $re");
 	$1 and print STDERR "# '$1' (", length ($1), ")\n";
 	}
     else {
@@ -63,3 +66,10 @@ undef				undef
 				^ {4}\{\n {8}foo {14}=> 1\n {8}}\n	inner hash
 				^ {4}]\Z				outer list end
 [[0],{foo=>1}]			\A\[\n {4}\[\n {8}0\n {8}],\n {4}\{\n {8}foo {14}=> 1\n {8}}\n {4}]\Z	full struct
+--	Sorting
+S:1:{ab=>1,bc=>2,cd=>3,de=>13}	ab.*bc.*cd.*de	default sort
+S:R:{ab=>1,bc=>2,cd=>3,de=>13}	de.*cd.*bc.*ab	reverse sort
+S:V:{ab=>1,bc=>2,cd=>3,de=>13}	1.*13.*2.*3	sort by value
+S:VR:{ab=>1,bc=>2,cd=>3,de=>13}	3.*2.*13.*1	reverse sort by value
+S:VN:{ab=>1,bc=>2,cd=>3,de=>13}	1.*2.*3.*13	sort by value numeric
+S:VNR:{ab=>1,bc=>2,cd=>3,d=>13}	13.*3.*2.*1	reverse sort by value numeric

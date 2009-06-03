@@ -4,7 +4,8 @@ use strict;
 use warnings;
 
 # I would like more tests, but contents change over every perl version
-use Test::More tests => 5;
+use Test::More tests => 6;
+use Test::NoWarnings;
 
 use Data::Peek;
 

@@ -6,9 +6,9 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.25";
+$VERSION   = "0.26";
 @ISA       = qw( DynaLoader Exporter );
-@EXPORT    = qw( DDumper DPeek DDisplay DDump DDual );
+@EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual );
 @EXPORT_OK = qw( triplevar );
 $] >= 5.007003 and push @EXPORT, "DDump_IO";
 
@@ -18,13 +18,62 @@ bootstrap Data::Peek $VERSION;
 
 use Data::Dumper;
 
+my %sk = (
+    undef	=> 0,
+    ""		=> 0,
+    0		=> 0,
+    1		=> 1,
+
+    V	=> sub {	# Sort by value
+	    my $r = shift;
+	    [         sort { $r->{$a} cmp $r->{$b} } keys %$r ];
+	    },
+    VN	=> sub {	# Sort by value numeric
+	    my $r = shift;
+	    [         sort { $r->{$a} <=> $r->{$b} } keys %$r ];
+	    },
+    VNR	=> sub {	# Sort by value numeric reverse
+	    my $r = shift;
+	    [         sort { $r->{$b} <=> $r->{$a} } keys %$r ];
+	    },
+    VR	=> sub {	# Sort by value reverse
+	    my $r = shift;
+	    [         sort { $r->{$b} cmp $r->{$a} } keys %$r ];
+	    },
+    R	=> sub {	# Sort reverse
+	    my $r = shift;
+	    [ reverse sort                           keys %$r ];
+	    },
+    );
+my $_sortkeys = 1;
+
+sub DDsort
+{
+    @_ or return;
+
+    $_sortkeys = exists $sk{$_[0]} ? $sk{$_[0]} : $_[0];
+    } # DDsort
+
+sub import
+{
+    my @exp = @_;
+    my @etl;
+    foreach my $p (@exp) {
+	exists $sk{$p} and DDsort ($p), next;
+
+	push @etl, $p;
+	}
+    __PACKAGE__->export_to_level (1, @etl);
+    } # import
+
 sub DDumper
 {
-    local $Data::Dumper::Sortkeys = 1;
+    local $Data::Dumper::Sortkeys = $_sortkeys;
     local $Data::Dumper::Indent   = 1;
 
     my $s = Data::Dumper::Dumper @_;
     $s =~ s!^(\s*)'([^']*)'\s*=>!sprintf "%s%-16s =>", $1, $2!gme;	# Align => '
+    $s =~ s!\bbless\s*\(\s*!bless (!gm and $s =~ s!\s+\)([;,])$!)$1!gm;
     $s =~ s!^(?= *[]}](?:[;,]|$))!  !gm;
     $s =~ s!^(\s+)!$1$1!gm;
 
@@ -186,6 +235,35 @@ Example
       foo              => 'egg'
       };
 
+=head2 DDsort ( 0 | 1 | R | V | VR | VN | VNR )
+
+Set the hash sort algorithm for DDumper. The default is to sort by key value.
+
+  0   - Do not sort
+  1   - Sort by key
+  R   - Reverse sort by key
+  V   - Sort by value
+  VR  - Reverse sort by value
+  VN  - Sort by value numerical
+  VNR - Reverse sort by value numerical
+
+These can also be passed to import:
+
+  $ perl -MDP=VNR -we'DDumper { foo => 1, bar => 2, zap => 3, gum => 13 }'
+  $VAR1 = {
+      gum              => 13,
+      zap              => 3,
+      bar              => 2,
+      foo              => 1
+      };
+  $ perl -MDP=V   -we'DDumper { foo => 1, bar => 2, zap => 3, gum => 13 }'
+  $VAR1 = {
+      foo              => 1,
+      gum              => 13,
+      bar              => 2,
+      zap              => 3
+      };
+
 =head2 DPeek
 
 =head2 DPeek ($var)
@@ -215,12 +293,12 @@ Example
 
   "abc\nde\x{20ac}fg"
 
-=head2 DDual ($var [, $getmagic])
+=head2 my ($pv, $iv, $nv, $rv, $hm) = DDual ($var [, $getmagic])
 
 DDual will return the basic elements in a variable, guaranteeing that no
 conversion takes place. This is very useful for dual-var variables, or
 when checking is a variable has defined entries for a certain type of
-scalar. For each Integer (IV), Double (NV), String (PV), and Reference (RV),
+scalar. For each String (PV), Integer (IV), Double (NV), and Reference (RV),
 the current value of C<$var> is returned or undef if it is not set (yet).
 The 5th element is an indicator if C<$var> has magic, which is B<not> invoked
 in the returned values, unless explicitly asked for with a true optional
@@ -243,7 +321,7 @@ C<triplevar ()> is not exported by default.
 Example:
 
   print DPeek for DDual
-      Data::Peek::triplevar ("\N{GREEK SMALL LETTER PI}", 3, 3.1415)'
+      Data::Peek::triplevar ("\N{GREEK SMALL LETTER PI}", 3, 3.1415);
 
   PV("\317\200"\0) [UTF8 "\x{3c0}"]
   IV(3)
@@ -251,7 +329,7 @@ Example:
   SV_UNDEF
   IV(0)
 
-=head3 DDump ($var [, $dig_level])
+=head2 DDump ($var [, $dig_level])
 
 A very useful module when debugging is C<Devel::Peek>, but is has one big
 disadvantage: it only prints to STDERR, which is not very handy when your
@@ -440,11 +518,16 @@ Base interface to internals for C<DDump ()>.
 
 =head1 BUGS
 
+Windows and AIX might be using a build where not all symbols that were
+supposed to be exported in the public API are not. Perl_pv_peek () is
+one of them.
+
 Not all types of references are supported.
 
 It might crash.
 
-No idea how far back this goes in perl support.
+No idea how far back this goes in perl support, but Devel::PPPort has
+proven to be a big help.
 
 =head1 SEE ALSO
 
@@ -457,7 +540,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2008 H.Merijn Brand
+Copyright (C) 2008-2009 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
