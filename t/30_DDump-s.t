@@ -65,7 +65,9 @@ undef
 SV = PV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY)
-  PV = 0
+  PV = 0x**** ""\0
+  CUR = 0
+  LEN = 8
 ==
 0
 --
@@ -73,7 +75,9 @@ SV = PVIV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY,IOK,pIOK)
   IV = 0
-  PV = 0
+  PV = 0x**** ""\0
+  CUR = 0
+  LEN = 8
 ==
 1
 --
@@ -81,7 +85,9 @@ SV = PVIV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY,IOK,pIOK)
   IV = 1
-  PV = 0
+  PV = 0x**** ""\0
+  CUR = 0
+  LEN = 8
 ==
 ""
 --

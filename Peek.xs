@@ -163,6 +163,21 @@ DDual (sv, ...)
     /* XS DDual */
 
 void
+DGrow (sv, size)
+    SV     *sv
+    IV      size
+
+  PROTOTYPE: $$
+  PPCODE:
+    if (SvROK (sv))
+	sv = SvRV (sv);
+    if (!SvPOK (sv))
+	sv_setpvn (sv, "", 0);
+    SvGROW (sv, size);
+    mPUSHi (SvLEN (sv));
+    /* XS DGrow */
+
+void
 DDump_XS (sv)
     SV   *sv
 

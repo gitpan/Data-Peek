@@ -1,6 +1,6 @@
 --- #YAML:1.1
 name:                    Data::Peek
-version:                 0.27
+version:                 0.28
 abstract:                Modified and extended debugging facilities
 license:                 perl
 author:              
@@ -10,12 +10,12 @@ distribution_type:       module
 provides:
     Data::Peek:
         file:            Peek.pm
-        version:         0.27
+        version:         0.28
 requires:     
     perl:                5.006
     DynaLoader:          0
 recommends:
-    perl:                5.008005
+    perl:                5.010001
 configure_requires:
     ExtUtils::MakeMaker: 0
 build_requires:

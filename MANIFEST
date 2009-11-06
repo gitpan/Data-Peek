@@ -17,5 +17,6 @@ t/40_DDump-h.t		Tests for DDump () returning hash   using _XS
 t/41_DDump-h.t		Tests for DDump () returning hash   using _IO
 t/50_DDual.t		Tests for DDual ()
 t/51_triplevar.t	Tests for triplevar ()
+t/52_DGrow.t		Tests for DGrow ()
 examples/ddumper.pl	show the use
 META.yml                                 Module meta-data (added by MakeMaker)

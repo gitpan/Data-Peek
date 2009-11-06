@@ -6,9 +6,9 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.27";
+$VERSION   = "0.28";
 @ISA       = qw( DynaLoader Exporter );
-@EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual );
+@EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual DGrow );
 @EXPORT_OK = qw( triplevar );
 $] >= 5.007003 and push @EXPORT, "DDump_IO";
 
@@ -92,16 +92,16 @@ BEGIN {
 
 sub _DDump_ref
 {
-    my ($var, $down) = (@_, 0);
+    my (undef, $down) = (@_, 0);
 
-    my $ref = ref $var;
+    my $ref = ref $_[0];
     if ($ref eq "SCALAR" || $ref eq "REF") {
-	my %hash = DDump ($$var, $down);
+	my %hash = DDump (${$_[0]}, $down);
 	return { %hash };
 	}
     if ($ref eq "ARRAY") {
 	my @list;
-	foreach my $list (@$var) {
+	foreach my $list (@{$_[0]}) {
 	    my %hash = DDump ($list, $down);
 	    push @list, { %hash };
 	    }
@@ -109,8 +109,8 @@ sub _DDump_ref
 	}
     if ($ref eq "HASH") {
 	my %hash;
-	foreach my $key (sort keys %$var) {
-	    $hash{DPeek ($key)} = { DDump ($var->{$key}, $down) };
+	foreach my $key (sort keys %{$_[0]}) {
+	    $hash{DPeek ($key)} = { DDump ($_[0]->{$key}, $down) };
 	    }
 	return { %hash };
 	}
@@ -119,16 +119,16 @@ sub _DDump_ref
 
 sub _DDump
 {
-    my ($var, $down, $dump, $fh) = (@_, "");
+    my (undef, $down, $dump, $fh) = (@_, "");
 
     if ($has_perlio and open $fh, ">", \$dump) {
 	#print STDERR "Using DDump_IO\n";
-	DDump_IO ($fh, $var, $down);
+	DDump_IO ($fh, $_[0], $down);
 	close $fh;
 	}
     else {
 	#print STDERR "Using DDump_XS\n";
-	$dump = DDump_XS ($var);
+	$dump = DDump_XS ($_[0]);
 	}
 
     return $dump;
@@ -136,8 +136,8 @@ sub _DDump
 
 sub DDump ($;$)
 {
-    my ($var, $down) = (@_, 0);
-    my @dump = split m/[\r\n]+/, _DDump ($var, wantarray || $down) or return;
+    my (undef, $down) = (@_, 0);
+    my @dump = split m/[\r\n]+/, _DDump ($_[0], wantarray || $down) or return;
 
     if (wantarray) {
 	my %hash;
@@ -149,8 +149,8 @@ sub DDump ($;$)
 	    $hash{FLAGS} = { map { $_ => 1 } split m/,/ => $hash{FLAGS} };
 	    }
 
-	$down && ref $var and
-	    $hash{RV} = _DDump_ref ($var, $down - 1) || $var;
+	$down && ref $_[0] and
+	    $hash{RV} = _DDump_ref ($_[0], $down - 1) || $_[0];
 	return %hash;
 	}
 
@@ -192,7 +192,8 @@ Data::Peek - A collection of low-level debug facilities
  close $fh;
  print $dump;
 
- use Data::Peek qw( triplevar );
+ use Data::Peek qw( DGrow triplevar );
+ my $x = ""; DGrow ($x, 10000);
  my $tv = triplevar ("\N{GREEK SMALL LETTER PI}", 3, "3.1415");
 
 =head1 DESCRIPTION
@@ -321,6 +322,24 @@ In void context, DDual does the equivalent of
       "  RV: ", DPeek ($d[3]), "\n";
     }
   
+=head2 my $LEN = DGrow ($pv, $size)
+
+Fastest way to preallocate space for a PV scalar. Returns the allocated
+length. If $size is smaller than the already allocated space, it will
+not shrink.
+
+ cmpthese (-2, {
+     pack => q{my $x = ""; $x = pack "x20000"; $x = "";},
+     op_x => q{my $x = ""; $x = "x"  x 20000;  $x = "";},
+     grow => q{my $x = ""; DGrow ($x,  20000); $x = "";},
+     });
+
+           Rate  op_x  pack  grow
+ op_x   62127/s    --  -59%  -96%
+ pack  152046/s  145%    --  -91%
+ grow 1622943/s 2512%  967%    --
+
+
 =head2 triplevar ($pv, $iv, $nv)
 
 When making C<DDual ()> I wondered if it were possible to create triple-val
