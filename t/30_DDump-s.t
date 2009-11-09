@@ -45,7 +45,7 @@ foreach my $test (@tests) {
 	$dump =~ s/\b0x[0-9a-f]+\b/0x****/g;
 	$dump =~ s/\b(REFCNT =) [0-9]{4,}/$1 -1/g;
 
-	$dump =~ s/\bLEN = [1-7]\b/LEN = 8/;	# aligned at long long?
+	$dump =~ s/\bLEN = (?:[1-9]|1[0-6])\b/LEN = 8/;	# aligned at long long?
 
 	$dump =~ s/\bPADBUSY\b,?//g	if $] < 5.010;
 
@@ -53,6 +53,7 @@ foreach my $test (@tests) {
 	$dump =~ s/,?\bIsUV\b//g	if $] < 5.008;
 
 	$in =~ s/[\s\n]+/ /g;
+
 	is ($dump, $out, "DDump ($in)");
 	}
     }

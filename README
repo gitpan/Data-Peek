@@ -1,49 +1,65 @@
-Module:
-    Data::Peek - A collection of low-level debug functions
+=head1 NAME
 
-Description:
-    Modified and extended wrapper functions to make debugging more
-    pleasureable.
+Data::Peek - A collection of low-level debug functions
 
-    DDumper is a wrapper around Data::Dumper with always sorted keys.
-    The output is however reflowed and not parseable anymore (in most
-    cases) as the quotation around the keys is removed.
+=head1 Description
 
-    DDump is a wrapper around perl's core function sv_dump (), which
-    should enable you to use the output instead of the default behaviour
-    that only prints to STDERR.
+Modified and extended wrapper functions to make debugging more
+pleasurable.
 
-    DPeek is a wrapper around internals Perl_sv_peek
+DDumper () is a wrapper around Data::Dumper with always sorted keys.
+The output is however reflowed and not parsable anymore (in most
+cases) as the quotation around the keys is removed.
 
-    DDump_IO is a wrapper around perl's core function do_sv_dump (),
-    which acts like sv_dump (), but to a PerlIO stream, which is only
-    available in perl 5.8 and higher.
+DDump () is a wrapper around perl's core function sv_dump (), which
+should enable you to use the output instead of the default behavior
+that only prints to STDERR.
 
-    Recent changes can be (re)viewed in the public GIT repository at
-    http://repo.or.cz/w/Data-Peek.git
+DPeek () is a wrapper around internals Perl_sv_peek
 
-Copying:
-    Copyright (c) 2008-2009 H.Merijn Brand.  All rights reserved.
+DDump_IO () is a wrapper around perl's core function do_sv_dump (),
+which acts like sv_dump (), but to a PerlIO stream, which is only
+available in perl 5.8 and higher.
 
-    This program is free software; you can redistribute it and/or modify
-    it under the same terms as Perl itself.
+=head1 PREREQUISITES
 
-Prerequisites:
-    Perl 5.6.0 and up.
-    Some versions of perl on some operating system(s) might not have
-    exported the internals (yet). This module won't build then.
+Perl 5.6.0 and up.
+Some versions of perl on some operating system(s) might not have
+exported the internals (yet). This module won't build then.
 
-    If you run a perl that did not export Perl_sv_peek (), DPeek will
-    not be available. If you happen to encounter that problem, most
-    likely on Windows or AIX, C<export NO_SV_PEEK=1> will make the
-    build and test pass (I hope)
+If you run a perl that did not export Perl_sv_peek (), DPeek will
+not be available. If you happen to encounter that problem, most
+likely on Windows or AIX, C<export NO_SV_PEEK=1> will make the
+build and test pass (I hope)
 
-Build/Installation:
-    Standard build/installation:
-	perl Makefile.PL
-	make
-	make test
-	make install
+=head1 INSTALLATION
 
-Author:
-    H.Merijn Brand <h.m.brand@xs4all.nl>
+  $ perl Makefile.PL
+  $ make
+  $ make test
+  $ make install
+
+Recent changes can be (re)viewed in the public GIT repository at
+http://repo.or.cz/w/Data-Peek.git
+
+Feel free to clone your own copy:
+
+ $ git clone http://repo.or.cz/r/Data-Peek.git Data-Peek
+
+or get it as a tgz:
+
+ $ wget --output-document=Data-Peek-git.tgz \
+	   'http://repo.or.cz/w/Data-Peek.git?a=snapshot;sf=tgz'
+
+=head1 AUTHOR
+
+H.Merijn Brand <h.m.brand@xs4all.nl>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2008-2009 H.Merijn Brand.  All rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

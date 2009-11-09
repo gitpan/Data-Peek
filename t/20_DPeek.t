@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 50;
 use Test::NoWarnings;
 
 use Data::Peek;
@@ -11,12 +11,8 @@ use Data::Peek;
 $| = 1;
 
 my $peek = DPeek (0);
-if ($peek =~ m/^Your perl did not/) {
-    plan skip_all => $peek;
-    }
-else {
-    plan tests => 50;
-    }
+SKIP: {
+$peek =~ m/^Your perl did not/ and skip ($peek, 49);
 
 like (DPeek ($/), qr'^PVMG\("\\(n|12)"\\0\)',	'$/');
   is (DPeek ($\),    'PVMG()',			'$\\');
@@ -92,5 +88,5 @@ like (DPeek (*VAR{SCALAR}), qr'\\PV(IV|MG)\(0\)',' *VAR{SCALAR}');
   is (DPeek (*VAR{IO}),		'\IO()',	' *VAR{IO}');
   is (DPeek (*VAR{FORMAT}),$]<5.008?'SV_UNDEF':'\FM()',' *VAR{FORMAT}');
   }
-
+}
 1;

@@ -1,3 +1,8 @@
+2009-11-09 0.29 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+    * Use skip instead of skip_all for builds that have no DPeek ()
+    * Be more lenient towards the allocated space
+
 2009-11-06 0.28 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
     * DDump () now dumps the variable itself, instead of a copy (Zefram)
