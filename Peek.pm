@@ -6,7 +6,7 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.29";
+$VERSION   = "0.30";
 @ISA       = qw( DynaLoader Exporter );
 @EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual DGrow );
 @EXPORT_OK = qw( triplevar );
@@ -68,16 +68,21 @@ sub import
 
 sub DDumper
 {
-    local $Data::Dumper::Sortkeys = $_sortkeys;
-    local $Data::Dumper::Indent   = 1;
+    local $Data::Dumper::Sortkeys  = $_sortkeys;
+    local $Data::Dumper::Indent    = 1;
+    local $Data::Dumper::Quotekeys = 0;
+    local $Data::Dumper::Deparse   = 1;
+    local $Data::Dumper::Terse     = 1;
+    local $Data::Dumper::Useqq     = 0;	# I want unicode visible
 
     my $s = Data::Dumper::Dumper @_;
-    $s =~ s!^(\s*)'([^']*)'\s*=>!sprintf "%s%-16s =>", $1, $2!gme;	# Align => '
-    $s =~ s!\bbless\s*\(\s*!bless (!gm and $s =~ s!\s+\)([;,])$!)$1!gm;
-    $s =~ s!^(?= *[]}](?:[;,]|$))!  !gm;
-    $s =~ s!^(\s+)!$1$1!gm;
+    $s =~ s/^(\s*)(.*?)\s*=>/sprintf "%s%-16s =>", $1, $2/gme;	# Align =>
+    $s =~ s/\bbless\s*\(\s*/bless (/gm and $s =~ s/\s+\)([;,])$/)$1/gm;
+    $s =~ s/^(?= *[]}](?:[;,]|$))/  /gm;
+    $s =~ s/^(\s*[{[]) *\n *(?=\S)(?![{[])/$1   /gm;
+    $s =~ s/^(\s+)/$1$1/gm;
 
-    defined wantarray or print STDERR $s;
+    defined wantarray or warn $s;
     return $s;
     } # DDumper
 
@@ -158,7 +163,7 @@ sub DDump ($;$)
 
     defined wantarray and return $dump;
 
-    print STDERR $dump;
+    warn $dump;
     } # DDump
 
 "Indent";
@@ -220,14 +225,13 @@ And the result is further beautified to meet my needs:
   * arrows for hashes are aligned at 16 (longer keys don't align)
   * closing braces and brackets are now correctly aligned
 
-In void context, C<DDumper ()> prints to STDERR.
+In void context, C<DDumper ()> warn ()'s.
 
 Example
 
   print DDumper { ape => 1, foo => "egg", bar => [ 2, "baz", undef ]};
 
-  $VAR1 = {
-      ape              => 1,
+  {   ape              => 1,
       bar              => [
           2,
           'baz',
@@ -251,15 +255,13 @@ Set the hash sort algorithm for DDumper. The default is to sort by key value.
 These can also be passed to import:
 
   $ perl -MDP=VNR -we'DDumper { foo => 1, bar => 2, zap => 3, gum => 13 }'
-  $VAR1 = {
-      gum              => 13,
+  {   gum              => 13,
       zap              => 3,
       bar              => 2,
       foo              => 1
       };
   $ perl -MDP=V   -we'DDumper { foo => 1, bar => 2, zap => 3, gum => 13 }'
-  $VAR1 = {
-      foo              => 1,
+  {   foo              => 1,
       gum              => 13,
       bar              => 2,
       zap              => 3
@@ -394,8 +396,7 @@ Example
   my %h = DDump "abc\x{0a}de\x{20ac}fg";
   print DDumper \%h;
 
-  $VAR1 = {
-      CUR              => '11',
+  {   CUR              => '11',
       FLAGS            => {
           PADBUSY          => 1,
           PADMY            => 1,
@@ -416,8 +417,7 @@ Example
       }, 1;
   print DDumper \%h;
 
-  $VAR1 = {
-      FLAGS            => {
+  {   FLAGS            => {
           PADBUSY          => 1,
           PADMY            => 1,
           ROK              => 1
@@ -570,7 +570,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 H.Merijn Brand
+Copyright (C) 2008-2010 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

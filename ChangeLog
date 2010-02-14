@@ -1,3 +1,10 @@
+2010-02-14 0.30 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+    * Use $Data::Dumper::Quotekeys = 0; instead of removing the quotes myself
+    * Put first hash element after opening lonely brace
+    * Upped copyright to 2010
+    * Use warn () instead of print STDERR
+
 2009-11-09 0.29 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
     * Use skip instead of skip_all for builds that have no DPeek ()

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 56;
+use Test::More tests => 55;
 use Test::NoWarnings;
 
 BEGIN {
@@ -27,11 +27,11 @@ while (<DATA>) {
 	eval "\$var = $v";
 	ok ($dump = DDumper ($var),	"DDumper ($v)");
 	$dump =~ s/\A\$VAR1 = //;
-	$dump =~ s/;\n\Z//;
+	$dump =~ s/;?\n\Z//;
 	}
     if ($re) {
 	like ($dump, qr{$exp}ms,	".. content $re");
-	$1 and print STDERR "# '$1' (", length ($1), ")\n";
+	$1 and diag "# '$1' (", length ($1), ")\n";
 	}
     else {
 	is   ($dump,    $exp,		".. content");
@@ -54,18 +54,17 @@ undef				undef
 (0, 1)				1
 \(0, 1)				\1
 --	Structures
-[0, 1]				^\[\n					line 1
-				^    0,\n				line 2
-				^    1\n				line 3
-				^    ]\Z				line 4
-[0,1,2]				\A\[\n\s+0,\n\s+1,\n\s+2\n\s+]\Z	line splitting
+[0, 1]				^\[   0,\n				line 1
+				^    1\n				line 2
+				^    ]\Z				line 3
+[0,1,2]				\A\[\s+0,\n\s+1,\n\s+2\n\s+]\Z		line splitting
 --	Indentation
-[0]				\A\[\n    0\n    ]\Z			single indent
+[0]				\A\[   0\n    ]\Z			single indent
 [[0],{foo=>1}]			^\[\n					outer list
-				^ {4}\[\n {8}0\n {8}],\n {4}		inner list
-				^ {4}\{\n {8}foo {14}=> 1\n {8}}\n	inner hash
+				^ {4}\[   0\n {8}],\n {4}		inner list
+				^ {4}\{   foo {14}=> 1\n {8}}\n		inner hash
 				^ {4}]\Z				outer list end
-[[0],{foo=>1}]			\A\[\n {4}\[\n {8}0\n {8}],\n {4}\{\n {8}foo {14}=> 1\n {8}}\n {4}]\Z	full struct
+[[0],{foo=>1}]			\A\[\n {4}\[   0\n {8}],\n {4}\{   foo {14}=> 1\n {8}}\n {4}]\Z	full struct
 --	Sorting
 S:1:{ab=>1,bc=>2,cd=>3,de=>13}	ab.*bc.*cd.*de	default sort
 S:R:{ab=>1,bc=>2,cd=>3,de=>13}	de.*cd.*bc.*ab	reverse sort
