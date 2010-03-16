@@ -1,3 +1,7 @@
+2010-03-16 0.31 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+    * Dropped YAML spec to 1.0
+
 2010-02-14 0.30 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
     * Use $Data::Dumper::Quotekeys = 0; instead of removing the quotes myself
