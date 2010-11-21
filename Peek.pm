@@ -6,11 +6,11 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.31";
+$VERSION   = "0.32";
 @ISA       = qw( DynaLoader Exporter );
-@EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DDual DGrow );
+@EXPORT    = qw( DDumper DDsort DPeek DDisplay DDump DHexDump DDual DGrow );
 @EXPORT_OK = qw( triplevar );
-$] >= 5.007003 and push @EXPORT, "DDump_IO";
+push @EXPORT, "DDump_IO";
 
 bootstrap Data::Peek $VERSION;
 
@@ -166,6 +166,33 @@ sub DDump ($;$)
     warn $dump;
     } # DDump
 
+sub DHexDump
+{
+    use bytes;
+    my $off = 0;
+    my @out;
+    my $var = @_ ? $_[0] : $_;
+    defined $var or return;
+    my $str = "$var";	# force stringification
+    for (unpack "(A32)*", unpack "H*", $str) {
+	my @b = unpack "(A2)*", $_;
+	my $out = sprintf "%04x ", $off;
+	$out .= " ".($b[$_]||"  ") for 0 ..  7;
+	$out .= " ";
+	$out .= " ".($b[$_]||"  ") for 8 .. 15;
+	$out .= "  ";
+	$out .= ($_ < 0x20 || $_ >= 0x7f ? "." : chr $_) for map { hex $_ } @b;
+	push @out, $out."\n";
+	$off += 16;
+	}
+
+    wantarray and return @out;
+
+    defined wantarray and return join "", @out;
+
+    warn join "", @out;
+    } # DHexDump
+
 "Indent";
 
 __END__
@@ -184,6 +211,7 @@ Data::Peek - A collection of low-level debug facilities
  my ($pv, $iv, $nv, $rv, $magic) = DDual ($var [, 1]);
  print DPeek for DDual ($!, 1);
  print DDisplay ("ab\nc\x{20ac}\rdef\n");
+ print DHexDump ("ab\nc\x{20ac}\rdef\n");
 
  my $dump = DDump $var;
  my %hash = DDump \@list;
@@ -298,6 +326,24 @@ Example
 
   "abc\nde\x{20ac}fg"
 
+=head2 DHexDump
+
+=head2 DHexDump ($var)
+
+Show the (stringified) content of a scalar as a hex-dump.  If C<$var>
+is omitted, C<$_> is dumped. Returns C<undef> or an empty list if
+C<$var> (or C<$_>) is undefined.
+
+In void context, the dump is done to STDERR. In scalar context, the
+complete dump is returned as a single string. In list context, the dump
+is returned as lines.
+
+Example
+
+  print DHexDump "abc\x{0a}de\x{20ac}fg";
+
+  0000  61 62 63 0a 64 65 e2 82  ac 66 67                 abc.de...fg
+
 =head2 my ($pv, $iv, $nv, $rv, $hm) = DDual ($var [, $getmagic])
 
 DDual will return the basic elements in a variable, guaranteeing that no
@@ -367,7 +413,7 @@ Example:
 
 A very useful module when debugging is C<Devel::Peek>, but is has one big
 disadvantage: it only prints to STDERR, which is not very handy when your
-code wants to inspect variables al a low level.
+code wants to inspect variables at a low level.
 
 Perl itself has C<sv_dump ()>, which does something similar, but still
 prints to STDERR, and only one level deep.
@@ -470,8 +516,7 @@ Example
 =head2 DDump_IO ($io, $var [, $dig_level])
 
 A wrapper function around perl's internal C<Perl_do_sv_dump ()>, which
-makes C<Devel::Peek> completely superfluous. As PerlIO is only available
-perl version 5.7.3 and up, this function is not available in older perls.
+makes C<Devel::Peek> completely superfluous.
 
 Example
 
@@ -561,8 +606,8 @@ proven to be a big help.
 
 =head1 SEE ALSO
 
-L<Devel::Peek(3)>, L<Data::Dumper(3)>, L<Data::Dump(3)>, L<Devel::Dumpvar>,
-L<Data::Dump::Streamer(3)>
+L<Devel::Peek>, L<Data::Dumper>, L<Data::Dump>, L<Devel::Dumpvar>,
+L<Data::Dump::Streamer>
 
 =head1 AUTHOR
 

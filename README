@@ -18,12 +18,11 @@ that only prints to STDERR.
 DPeek () is a wrapper around internals Perl_sv_peek
 
 DDump_IO () is a wrapper around perl's core function do_sv_dump (),
-which acts like sv_dump (), but to a PerlIO stream, which is only
-available in perl 5.8 and higher.
+which acts like sv_dump (), but to a PerlIO stream.
 
 =head1 PREREQUISITES
 
-Perl 5.6.0 and up.
+Perl 5.8.0 and up.
 Some versions of perl on some operating system(s) might not have
 exported the internals (yet). This module won't build then.
 

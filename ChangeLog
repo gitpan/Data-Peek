@@ -1,3 +1,10 @@
+2010-11-21 0.32 - H.Merijn Brand   <h.m.brand@xs4all.nl>
+
+    * Require perl 5.8.0
+    * DGrow tests for bigger gap
+    * Spell checking
+    * Add DHexDump ()
+
 2010-03-16 0.31 - H.Merijn Brand   <h.m.brand@xs4all.nl>
 
     * Dropped YAML spec to 1.0

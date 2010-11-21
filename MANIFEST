@@ -11,6 +11,7 @@ t/01_pod.t		Check if pod covers all
 t/10_DDumper.t		Tests for DDumper ()
 t/20_DPeek.t		Tests for DPeek ()
 t/21_DDisplay.t		Tests for DDisplay ()
+t/22_DHexDump.t		Tests for DHexDump ()
 t/30_DDump-s.t		Tests for DDump () returning string using _XS
 t/31_DDump-s.t		Tests for DDump () returning string using _IO
 t/40_DDump-h.t		Tests for DDump () returning hash   using _XS

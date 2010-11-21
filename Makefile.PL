@@ -2,7 +2,7 @@
 
 # Copyright PROCURA B.V. (c) 2008-2010 H.Merijn Brand
 
-require 5.006; # <- also see postamble at the bottom for META.yml
+require 5.008; # <- also see postamble at the bottom for META.yml
 use strict;
 
 use ExtUtils::MakeMaker;
@@ -91,7 +91,10 @@ sub postamble
 	'leaktest:',
 	q{	sandbox/leaktest $(FULLPERLRUN) "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)},
 	'',
-	'checkmeta:',
+	'spellcheck:',
+	'	pod-spell-check --aspell',
+	'',
+	'checkmeta:	spellcheck',
 	'	perl sandbox/genMETA.pl -c',
 	'',
 	'fixmeta:	distmeta',
