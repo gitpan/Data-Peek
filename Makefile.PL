@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright PROCURA B.V. (c) 2008-2010 H.Merijn Brand
+# Copyright PROCURA B.V. (c) 2008-2011 H.Merijn Brand
 
 require 5.008; # <- also see postamble at the bottom for META.yml
 use strict;
@@ -92,7 +92,7 @@ sub postamble
 	q{	sandbox/leaktest $(FULLPERLRUN) "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)},
 	'',
 	'spellcheck:',
-	'	pod-spell-check --aspell',
+	'	pod-spell-check --aspell --ispell',
 	'',
 	'checkmeta:	spellcheck',
 	'	perl sandbox/genMETA.pl -c',
@@ -134,7 +134,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2010 H.Merijn Brand
+Copyright (C) 2008-2011 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

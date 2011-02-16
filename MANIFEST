@@ -9,6 +9,7 @@ typemap			Define PerlIO for non-PerlIO perl
 t/00_pod.t		Check if pod is valid
 t/01_pod.t		Check if pod covers all
 t/10_DDumper.t		Tests for DDumper ()
+t/11_DDumper.t		Tests for DDumper () using Perl::Tidy
 t/20_DPeek.t		Tests for DPeek ()
 t/21_DDisplay.t		Tests for DDisplay ()
 t/22_DHexDump.t		Tests for DHexDump ()
