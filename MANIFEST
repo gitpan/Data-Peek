@@ -21,4 +21,5 @@ t/50_DDual.t		Tests for DDual ()
 t/51_triplevar.t	Tests for triplevar ()
 t/52_DGrow.t		Tests for DGrow ()
 examples/ddumper.pl	show the use
-META.yml                                 Module meta-data (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)

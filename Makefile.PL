@@ -14,7 +14,7 @@ my %wm = (
     VERSION_FROM => "Peek.pm",
     PREREQ_PM	 => { "DynaLoader"	 => 0,
 		      "Data::Dumper"	 => 0,
-		      "Test::More"	 => 0,
+		      "Test::More"	 => 0.88,
 		      "Test::Harness"	 => 0,
 		      "Test::NoWarnings" => 0,
 		      },
