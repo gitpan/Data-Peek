@@ -14,8 +14,8 @@
       },
    "distribution_type" : "module",
    "generated_by" : "Author",
-   "version" : "0.34",
-   "name" : "Data::Peek",
+   "version" : "0.35",
+   "name" : "Data-Peek",
    "author" : [
       "H.Merijn Brand <h.m.brand@xs4all.nl>"
       ],
@@ -25,7 +25,7 @@
       },
    "provides" : {
       "Data::Peek" : {
-         "version" : "0.34",
+         "version" : "0.35",
          "file" : "Peek.pm"
          }
       },

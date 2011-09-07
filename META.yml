@@ -1,24 +1,20 @@
 --- #YAML:1.0
-name:                    Data::Peek
-version:                 0.34
+name:                    Data-Peek
+version:                 0.35
 abstract:                Modified and extended debugging facilities
 license:                 perl
-author:              
+author:
     - H.Merijn Brand <h.m.brand@xs4all.nl>
 generated_by:            Author
 distribution_type:       module
 provides:
     Data::Peek:
         file:            Peek.pm
-        version:         0.34
-requires:     
+        version:         0.35
+requires:
     perl:                5.008
     DynaLoader:          0
     Data::Dumper:        0
-recommends:
-    perl:                5.014001
-    Perl::Tidy:          0
-    Test::More:          0.98
 configure_requires:
     ExtUtils::MakeMaker: 0
 build_requires:
@@ -27,6 +23,10 @@ test_requires:
     Test::Harness:       0
     Test::More:          0.88
     Test::NoWarnings:    0
+recommends:
+    perl:                5.014001
+    Perl::Tidy:          0
+    Test::More:          0.98
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          http://repo.or.cz/w/Data-Peek.git

@@ -8,7 +8,7 @@ use strict;
 use ExtUtils::MakeMaker;
 
 my %wm = (
-    NAME         => "Data::Peek",
+    NAME         => "Data-Peek",
     ABSTRACT     => "Extended/Modified debugging utilities",
     AUTHOR       => "H.Merijn Brand <h.merijn\@xs4all.nl>",
     VERSION_FROM => "Peek.pm",
