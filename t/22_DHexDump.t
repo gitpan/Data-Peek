@@ -14,7 +14,12 @@ is (DHexDump (""),		"",			'""');
 for (split m/##\n/ => test_data ()) {
     my ($desc, $in, $out) = split m/\n-\n/, $_, 3;
 
-    is (scalar DHexDump ($in), $out,	"HexDump $desc");
+    if ($in =~ s/\t(\d+)$//) {
+	is (scalar DHexDump ($in, $1), $out,	"HexDump $desc");
+	}
+    else {
+	is (scalar DHexDump ($in),     $out,	"HexDump $desc");
+	}
     }
 
 done_testing;
@@ -33,6 +38,12 @@ Documentation example
 abc\x{0a}de\x{20ac}fg
 -
 0000  61 62 63 0a 64 65 e2 82  ac 66 67                 abc.de...fg
+##
+Documentation example with length
+-
+abc\x{0a}de\x{20ac}fg	6
+-
+0000  61 62 63 0a 64 65                                 abc.de
 ##
 Binary data
 -

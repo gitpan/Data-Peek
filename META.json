@@ -14,7 +14,7 @@
       },
    "distribution_type" : "module",
    "generated_by" : "Author",
-   "version" : "0.36",
+   "version" : "0.37",
    "name" : "Data-Peek",
    "author" : [
       "H.Merijn Brand <h.m.brand@xs4all.nl>"
@@ -25,7 +25,7 @@
       },
    "provides" : {
       "Data::Peek" : {
-         "version" : "0.36",
+         "version" : "0.37",
          "file" : "Peek.pm"
          }
       },
@@ -36,7 +36,7 @@
       },
    "recommends" : {
       "Test::More" : "0.98",
-      "perl" : "5.014001",
+      "perl" : "5.014002",
       "Perl::Tidy" : "0"
       },
    "abstract" : "Modified and extended debugging facilities",
