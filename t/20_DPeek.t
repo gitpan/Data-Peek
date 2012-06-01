@@ -69,7 +69,7 @@ like (DPeek ($1), qr'^PVMG\("',			' $1');
   SKIP: {
       $] <= 5.008001 and skip "UTF8 tests useless in this ancient perl version", 1;
       $VAR = "a\x0a\x{20ac}";
-      like (DPeek ($VAR), qr'^PVIV\("a\\(n|12)\\342\\202\\254"\\0\) \[UTF8 "a\\?n\\x{20ac}"\]',
+      like (DPeek ($VAR), qr'^PVIV\("a\\(n|12)\\342\\202\\254"\\0\) \[UTF8 "a\\?n\\x\{20ac}"\]',
 						  ' $VAR "a\x0a\x{20ac}"');
       }
   $VAR = sub { "VAR" };

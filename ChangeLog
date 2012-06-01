@@ -1,3 +1,6 @@
+0.38	2012-05-29, H.Merijn Brand   <h.m.brand@xs4all.nl>
+    * Backslashed { in regex in test to satisfy perl-5.17
+
 0.37	2012-04-16, H.Merijn Brand   <h.m.brand@xs4all.nl>
     * Upped copyright to 2012
     * Allow length for DHexDump ()
