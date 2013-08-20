@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright PROCURA B.V. (c) 2008-2012 H.Merijn Brand
+# Copyright PROCURA B.V. (c) 2008-2013 H.Merijn Brand
 
 require 5.008; # <- also see postamble at the bottom for META.yml
 use strict;
@@ -16,7 +16,6 @@ my %wm = (
     PREREQ_PM	 => { "DynaLoader"	 => 0,
 		      "Data::Dumper"	 => 0,
 		      "Test::More"	 => 0.88,
-		      "Test::Harness"	 => 0,
 		      "Test::NoWarnings" => 0,
 		      },
     clean        => { FILES => join " ", qw(
@@ -27,6 +26,8 @@ my %wm = (
 			 cover_db
 			 valgrind.log
 			 )
+		      },
+    macro        => { TARFLAGS => "--format=ustar -c -v -f",
 		      },
     );
 $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
@@ -135,7 +136,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2012 H.Merijn Brand
+Copyright (C) 2008-2013 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -24,7 +24,7 @@ my @nl = ("\\n") x 2;
 my $var = "";
 
 foreach my $test (@tests) {
-    my ($in, $out) = split m/\n--\n/ => $test;
+    my ($in, $expect) = split m/\n--\n/ => $test;
     $in eq "" and next;
     SKIP: {
 	eval "\$var = $in;";
@@ -38,23 +38,33 @@ foreach my $test (@tests) {
 		@nl = ($dump =~ m/PV = 0x\w+ "([^"]+)".*"([^"]+)"/);
 		diag "# This perl dumps \\n as (@nl)";
 		# Catch differences in \n
-		$dump =~ s/"ab\Q$nl[0]\E(.*?)"ab\Q$nl[1]\E/"ab\\n$1"ab\\n/;
+		$dump =~ s/"ab\Q$nl[0]\E(.*?)"ab\Q$nl[1]\E/"ab\\n$1"ab\\n/g;
 		}
 	    }
 
 	$dump =~ s/\b0x[0-9a-f]+\b/0x****/g;
 	$dump =~ s/\b(REFCNT =) [0-9]{4,}/$1 -1/g;
 
-	$dump =~ s/\bLEN = (?:[1-9]|1[0-6])\b/LEN = 8/;	# aligned at long long?
+	$dump =~ s/\bLEN = (?:[1-9]|1[0-6])\b/LEN = 8/g; # aligned at long long?
 
 	$dump =~ s/\bPADBUSY\b,?//g	if $] < 5.010;
 
 	$dump =~ s/\bUV = /IV = /g	if $] < 5.008;
 	$dump =~ s/,?\bIsUV\b//g	if $] < 5.008;
 
-	$in =~ s/[\s\n]+/ /g;
+	my @expect = split m/(?<=\n)\|\n+/ => $expect;
 
-	is ($dump, $out, "DDump ($in)");
+	$in   =~ s/[\s\n]+/ /g;
+
+	my @match = grep { $dump eq $_ } @expect;
+	if (@match == 1) {
+	    is ($dump, $match[0], "DDump ($in)");
+	    }
+	else {
+	    my $match = shift @expect;
+	    is ($dump, $match, "DDump ($in)");
+	    diag ("DDump ($in) neither matches\n$_") for @expect;
+	    }
 	}
     }
 
@@ -69,6 +79,11 @@ SV = PV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
+|
+SV = PV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (PADMY)
+  PV = 0
 ==
 0
 --
@@ -79,6 +94,12 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
+|
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (PADMY,IOK,pIOK)
+  IV = 0
+  PV = 0
 ==
 1
 --
@@ -89,6 +110,12 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
+|
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (PADMY,IOK,pIOK)
+  IV = 1
+  PV = 0
 ==
 ""
 --
@@ -99,3 +126,12 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
+|
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (PADMY,POK,IsCOW,pPOK)
+  IV = 1
+  PV = 0x**** ""\0
+  CUR = 0
+  LEN = 8
+  COW_REFCNT = 0

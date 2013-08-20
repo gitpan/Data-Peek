@@ -1,46 +1,67 @@
 {
    "resources" : {
-      "repository" : "http://repo.or.cz/w/Data-Peek.git",
-      "license" : "http://dev.perl.org/licenses/"
-   },
+      "license" : [
+         "http://dev.perl.org/licenses/"
+         ],
+      "repository" : {
+         "type" : "git",
+         "url" : "http://repo.or.cz/r/Data-Peek.git",
+         "web" : "http://repo.or.cz/w/Data-Peek.git"
+         }
+      },
+   "version" : "0.39",
+   "abstract" : "Modified and extended debugging facilities",
    "meta-spec" : {
-      "version" : 2,
-      "url" : "https://metacpan.org/module/CPAN::Meta::Spec?#meta-spec"
-   },
-   "test_requires" : {
-      "Test::More" : "0.88",
-      "Test::Harness" : "0",
-      "Test::NoWarnings" : "0"
-   },
-   "distribution_type" : "module",
-   "generated_by" : "Author",
-   "version" : "0.38",
+      "version" : "2",
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec"
+      },
    "name" : "Data-Peek",
-   "author" : [
-      "H.Merijn Brand <h.m.brand@xs4all.nl>"
-   ],
-   "license" : "perl",
-   "build_requires" : {
-      "perl" : "5.008"
-   },
+   "license" : [
+      "perl_5"
+      ],
+   "dynamic_config" : 1,
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+            }
+         },
+      "test" : {
+         "recommends" : {
+            "Test::More" : "0.98"
+            },
+         "requires" : {
+            "Test::More" : "0.88",
+            "Test::NoWarnings" : "0"
+            }
+         },
+      "build" : {
+         "requires" : {
+            "perl" : "5.008"
+            }
+         },
+      "runtime" : {
+         "recommends" : {
+            "Data::Dumper" : "2.145",
+            "perl" : "5.016003",
+            "Perl::Tidy" : "0"
+            },
+         "requires" : {
+            "Data::Dumper" : "0",
+            "perl" : "5.008",
+            "DynaLoader" : "0"
+            }
+         }
+      },
    "provides" : {
       "Data::Peek" : {
-         "version" : "0.38",
-         "file" : "Peek.pm"
-      }
-   },
-   "requires" : {
-      "perl" : "5.008",
-      "Data::Dumper" : "0",
-      "DynaLoader" : "0"
-   },
-   "recommends" : {
-      "Test::More" : "0.98",
-      "perl" : "5.016000",
-      "Perl::Tidy" : "0"
-   },
-   "abstract" : "Modified and extended debugging facilities",
-   "configure_requires" : {
-      "ExtUtils::MakeMaker" : "0"
+         "file" : "Peek.pm",
+         "version" : "0.39"
+         }
+      },
+   "release_status" : "stable",
+   "generated_by" : "Author",
+   "author" : [
+      "H.Merijn Brand <h.m.brand@xs4all.nl>"
+      ]
    }
-}
