@@ -6,7 +6,7 @@ use warnings;
 use DynaLoader ();
 
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK );
-$VERSION   = "0.39";
+$VERSION   = "0.40";
 @ISA       = qw( DynaLoader Exporter );
 @EXPORT    = qw( DDumper DTidy DDsort DPeek DDisplay DDump DHexDump
 		 DDual DGrow );
@@ -96,7 +96,7 @@ sub DDumper
     my $s = Data::Dumper::Dumper @_;
     $s =~ s/^(\s*)(.*?)\s*=>/sprintf "%s%-16s =>", $1, $2/gme;  # Align =>
     $s =~ s/\bbless\s*\(\s*/bless (/gm and $s =~ s/\s+\)([;,])$/)$1/gm;
-    $s =~ s/^(?= *[]}](?:[;,]|$))/  /gm;
+    $s =~ s/^(?=\s*[]}](?:[;,]|$))/  /gm;
     $s =~ s/^(\s*[{[]) *\n *(?=\S)(?![{[])/$1   /gm;
     $s =~ s/^(\s+)/$1$1/gm;
 
@@ -116,7 +116,15 @@ sub DTidy
     local $Data::Dumper::Useqq     = 0;
 
     my $s = Data::Dumper::Dumper @_;
-    Perl::Tidy::perltidy (source => \$s, destination => \my $t);
+    my $t;
+    Perl::Tidy::perltidy (source => \$s, destination => \$t, argv => [
+	# Disable stupid options in ~/.perltidyrc
+	# people do so, even for root
+	"--no-backup-and-modify-in-place",
+	"--no-check-syntax",
+	"--no-standard-output",
+	"--no-warning-output",
+	]);
     $s = $t;
 
     defined wantarray or warn $s;
@@ -677,7 +685,7 @@ H.Merijn Brand <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2013 H.Merijn Brand
+Copyright (C) 2008-2014 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

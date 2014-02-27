@@ -1,3 +1,7 @@
+0.40	- 2014-02-27, H.Merijn Brand   <h.m.brand@xs4all.nl>
+    * Upped copyright to 2014
+    * Guard Perl::Tidy against stupid user options in .perltidyrc
+
 0.39	- 2013-08-17, H.Merijn Brand   <h.m.brand@xs4all.nl>
     * Upped copyright to 2013
     * Add alternative test results for 5.19.3 and up (COW and no PV for IV)

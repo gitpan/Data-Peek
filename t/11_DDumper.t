@@ -46,6 +46,7 @@ while (<DATA>) {
 	is   ($dump,    $exp,		".. content");
 	}
     }
+unlink "perltidy.LOG", "perltidy.ERR";
 
 1;
 
