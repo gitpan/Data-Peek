@@ -52,7 +52,7 @@ foreach my $test (@tests) {
 	$dump =~ s/\bUV = /IV = /g	if $] < 5.008;
 	$dump =~ s/,?\bIsUV\b//g	if $] < 5.008;
 
-	my @expect = split m/(?<=\n)\|\n+/ => $expect;
+	my @expect = split m/(?<=\n)\|(?:\s*#.*)?\n+/ => $expect;
 
 	$in   =~ s/[\s\n]+/ /g;
 
@@ -79,10 +79,15 @@ SV = PV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
-|
+| # as of 5.19.3
 SV = PV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY)
+  PV = 0
+| # as of 5.21.5
+SV = PV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = ()
   PV = 0
 ==
 0
@@ -94,10 +99,16 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
-|
+| # as of 5.19.3
 SV = PVIV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY,IOK,pIOK)
+  IV = 0
+  PV = 0
+| # as of 5.21.5
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (IOK,pIOK)
   IV = 0
   PV = 0
 ==
@@ -110,10 +121,16 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
-|
+| # as of 5.19.3
 SV = PVIV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY,IOK,pIOK)
+  IV = 1
+  PV = 0
+| # as of 5.21.5
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (IOK,pIOK)
   IV = 1
   PV = 0
 ==
@@ -126,10 +143,19 @@ SV = PVIV(0x****) at 0x****
   PV = 0x**** ""\0
   CUR = 0
   LEN = 8
-|
+| # as of 5.19.3
 SV = PVIV(0x****) at 0x****
   REFCNT = 1
   FLAGS = (PADMY,POK,IsCOW,pPOK)
+  IV = 1
+  PV = 0x**** ""\0
+  CUR = 0
+  LEN = 8
+  COW_REFCNT = 0
+| # as of 5.21.5
+SV = PVIV(0x****) at 0x****
+  REFCNT = 1
+  FLAGS = (POK,IsCOW,pPOK)
   IV = 1
   PV = 0x**** ""\0
   CUR = 0
